@@ -36,7 +36,7 @@ func DoctronHandler(params interface{}) interface{} {
 		return doctronOutputDTO
 	}
 
-	doctron := doctron_core.NewDoctron(doctronConfig.Ctx, doctronConfig.DoctronType, doctronConfig.ConvertConfig)
+	doctron := doctron_core.NewDoctron(doctronConfig)
 
 	convertBytes, err := doctron.Convert()
 	log(doctronConfig.IrisCtx, "uuid:[%s],doctron.Convert Elapsed [%s],url:[%s]", doctronConfig.TraceId, doctron.GetConvertElapsed(), doctronConfig.IrisCtx.Request().RequestURI)
@@ -56,7 +56,7 @@ func DoctronHandler(params interface{}) interface{} {
 			uploader.UploadConfig{Key: doctronConfig.UploadKey, Stream: convertBytes},
 		)
 		uploadUrl, err := doctronUploader.Upload()
-		log(doctronConfig.IrisCtx, "uuid:[%s],doctron.Upload Elapsed [%s],url:[%s]", doctronConfig.TraceId, doctronUploader.GetUploadElapsed(), doctronConfig.IrisCtx.Request().RequestURI)
+		log(doctronConfig.IrisCtx, "uuid:[%s],doctron.Upload Elapsed [%s],url:[%s], uploadUrl:[%s]", doctronConfig.TraceId, doctronUploader.GetUploadElapsed(), doctronConfig.IrisCtx.Request().RequestURI, uploadUrl)
 		if err != nil {
 			doctronOutputDTO.Err = err
 			return doctronOutputDTO

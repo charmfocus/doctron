@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+    doctron:
+        image: lampnick/doctron
+        restart: always
+        tty: true
+        init: true
+        volumes:
+            - ./configs/doctron/doctron.yaml:/doctron.yaml
+
+        ports:
+            - 7081:7081

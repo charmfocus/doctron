@@ -9,8 +9,9 @@ const (
 	ApiRateLimitExceeded                = 10000003
 	InvalidUrlScheme                    = 10000004
 	ConvertPdfFailed                    = 20000000
-	ConvertPdfWriteBytesFailed          = 20000001
-	ConvertPdfUploadFailed              = 20000002
+	ConvertSvgFailed                    = 20000001
+	ConvertPdfWriteBytesFailed          = 20000002
+	ConvertPdfUploadFailed              = 20000003
 	ConvertHtml2ImageFailed             = 30000000
 	ConvertHtml2ImageWriteBytesFailed   = 30000001
 	ConvertHtml2ImageUploadFailed       = 30000002

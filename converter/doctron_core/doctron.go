@@ -1,16 +1,19 @@
 package doctron_core
 
 import (
-	"context"
-	"github.com/lampnick/doctron/converter"
 	"time"
+
+	"github.com/lampnick/doctron/converter"
 )
 
 type Doctron struct {
-	ctx            context.Context
-	cc             converter.ConvertConfig
+	config         converter.DoctronConfig
 	buf            []byte
 	convertElapsed time.Duration
+}
+
+func (d *Doctron) Log(format string, args ...interface{}) {
+	d.config.IrisCtx.Application().Logger().Infof(format, args...)
 }
 
 type DoctronI interface {

@@ -57,6 +57,7 @@ func Html2ImageHandler(ctx iris.Context) {
 			_, _ = common.NewJsonOutput(ctx, outputDTO)
 			return
 		}
+		return
 	}
 	if doctronOutput.Err != nil {
 		outputDTO.Code = common.ConvertHtml2ImageFailed

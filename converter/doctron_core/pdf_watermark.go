@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"time"
+
 	"github.com/lampnick/doctron/pkg/curl"
 	"github.com/pdfcpu/pdfcpu/pkg/api"
 	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu"
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/sync/errgroup"
-	"io/ioutil"
-	"log"
-	"os"
-	"time"
 )
 
 type PdfWatermarkParams struct {
@@ -55,7 +56,7 @@ func (ins pdfWatermark) Convert() ([]byte, error) {
 		}
 	}()
 	var params PdfWatermarkParams
-	params, ok := ins.cc.Params.(PdfWatermarkParams)
+	params, ok := ins.config.ConvertConfig.Params.(PdfWatermarkParams)
 	if !ok {
 		return nil, errors.New("wrong pdf watermark params given")
 	}
@@ -66,7 +67,7 @@ func (ins pdfWatermark) Convert() ([]byte, error) {
 				err = fmt.Errorf("recover err:%v", e)
 			}
 		}()
-		pdfBytes, err := curl.GetBytesFromUrl(ins.cc.Url)
+		pdfBytes, err := curl.GetBytesFromUrl(ins.config.ConvertConfig.Url)
 		if err != nil {
 			return errors.New("download pdf failed,reason: " + err.Error())
 		}
@@ -111,7 +112,7 @@ func (ins pdfWatermark) Convert() ([]byte, error) {
 		return nil, err
 	}
 
-	wm, err := pdfcpu.ParseImageWatermarkDetails(watermark, "", true)
+	wm, err := pdfcpu.ParseImageWatermarkDetails(watermark, "", true, pdfcpu.POINTS)
 	if err != nil {
 		return []byte{}, errors.New("parse image failed,reason: " + err.Error())
 	}

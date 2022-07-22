@@ -1,4 +1,4 @@
-FROM golang:1.15.2-alpine as builder
+FROM golang:1.18.4-alpine as builder
 
 ENV GOROOT /usr/local/go
 ENV GOPATH /go
@@ -9,7 +9,9 @@ ENV GO111MODULE on
 RUN mkdir -p /doctron
 COPY . /doctron
 
-RUN cd /doctron && \
+RUN apk upgrade -U -a && \
+    apk add pkgconfig poppler-dev gcc libc-dev && \
+    cd /doctron && \
     go build && \
     cp -fr doctron /usr/local/bin && \
     chmod +x /usr/local/bin/doctron

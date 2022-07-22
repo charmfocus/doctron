@@ -1,12 +1,11 @@
-FROM alpine:3.12.0
+FROM alpine:3.16.0
 
 MAINTAINER lampnick <nick@lampnick.com>
 
-RUN echo "https://mirrors.aliyun.com/alpine/v3.12/main" > /etc/apk/repositories && \
-    echo "https://mirrors.aliyun.com/alpine/v3.12/community" >> /etc/apk/repositories && \
-    echo "https://mirrors.aliyun.com/alpine/v3.12/releases" >> /etc/apk/repositories && \
+RUN sed -i "s@dl-cdn.alpinelinux.org@mirrors.aliyun.com@g" /etc/apk/repositories && \
     apk upgrade -U -a && \
     apk add \
+    poppler-glib \
     git \
     curl \
     wget \
@@ -19,6 +18,8 @@ RUN echo "https://mirrors.aliyun.com/alpine/v3.12/main" > /etc/apk/repositories 
     && rm -fr /var/cache/* && \
     mkdir /var/cache/apk
 
+COPY ./fonts /usr/share/fonts
+COPY ./pdf2svg /usr/local/bin/pdf2svg
 RUN cd /usr/share/fonts && \
     git clone --progress --verbose https://github.com/lampnick/free-fonts.git && \
     mv free-fonts/* ./ && \
@@ -28,7 +29,7 @@ RUN cd /usr/share/fonts && \
     fc-list :lang=zh
 
 RUN chromium-browser --version
-RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64
+RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64
 RUN chmod +x /usr/local/bin/dumb-init
 # auto run chrome headless
 #ENTRYPOINT ["chromium-browser", "--headless", "--no-first-run", "---no-sandbox", "--disable-gpu", "--disable-dev-shm-usage", "--disable-setuid-sandbox", "--fast-start", "--single-process", "--disable-renderer-backgrounding", "--disable-sync", "--enable-automation", "--hide-scrollbars", "--mute-audio"]

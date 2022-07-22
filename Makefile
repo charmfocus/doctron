@@ -1,8 +1,8 @@
 .DEFAULT: help
 
-IMAGE_NAME ?= lampnick/doctron
-CENTOS_IMAGE_TAG ?= v0.3.2-centos
-ALPINE_IMAGE_TAG ?= v0.3.2-alpine
+IMAGE_NAME ?= registry.cn-beijing.aliyuncs.com/maiyatian/doctron
+CENTOS_IMAGE_TAG ?= v0.4.0-centos
+ALPINE_IMAGE_TAG ?= v0.4.0-alpine
 
 help: Makefile
 	@echo "Doctron is a document convert tools for html pdf image etc.\r\n"
@@ -12,11 +12,12 @@ help: Makefile
 
 ## build-runtime-alpine: build a runtime docker image with alpine.
 build-runtime-alpine:
-	@docker build -f Dockerfile.runtime.alpine -t lampnick/runtime:chromium-alpine .
+	@docker build --build-arg "https_proxy=http://192.168.0.102:1087" --build-arg "HTTPS_PROXY=http://192.168.0.102:1087" --build-arg "HTTP_PROXY=http://192.168.0.102:1087"  -f Dockerfile.runtime.alpine -t lampnick/runtime:chromium-alpine .
 
 ## build-doctron-alpine: build doctron docker image with alpine.
 build-doctron-alpine:
-	@docker build -t $(IMAGE_NAME):$(ALPINE_IMAGE_TAG) .
+	@docker build --build-arg "https_proxy=http://192.168.0.102:1087" --build-arg "HTTPS_PROXY=http://192.168.0.102:1087" --build-arg "HTTP_PROXY=http://192.168.0.102:1087" -t $(IMAGE_NAME):$(ALPINE_IMAGE_TAG) .
+	#@docker build -t $(IMAGE_NAME):$(ALPINE_IMAGE_TAG) .
 	@docker tag $(IMAGE_NAME):$(ALPINE_IMAGE_TAG) $(IMAGE_NAME):latest
 
 ## run-doctron-alpine: run doctron alpine docker image.

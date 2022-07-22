@@ -79,21 +79,25 @@ func (ins *html2image) Convert() ([]byte, error) {
 		ins.convertElapsed = time.Since(start)
 	}()
 	var params Html2ImageParams
-	params, ok := ins.cc.Params.(Html2ImageParams)
+	params, ok := ins.config.ConvertConfig.Params.(Html2ImageParams)
 	if !ok {
 		return nil, errors.New("wrong html2image params given")
 	}
-	ctx, cancel := chromedp.NewContext(ins.ctx)
+	ctx, cancel := chromedp.NewContext(ins.config.Ctx)
 	defer cancel()
 
 	if err := chromedp.Run(ctx,
-		chromedp.Navigate(ins.cc.Url),
+		chromedp.Navigate(ins.config.ConvertConfig.Url),
 		chromedp.Sleep(time.Duration(params.WaitingTime)*time.Millisecond),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 
 			if !params.CustomClip {
 				// get layout metrics
-				_, _, contentSize, err := page.GetLayoutMetrics().Do(ctx)
+				//_, _, contentSize, err := page.GetLayoutMetrics().Do(ctx)
+				_, _, contentSize, _, _, _, err := page.GetLayoutMetrics().Do(ctx)
+				if err != nil {
+					return err
+				}
 				if err != nil {
 					return err
 				}

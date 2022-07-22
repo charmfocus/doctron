@@ -57,6 +57,7 @@ func Html2PdfHandler(ctx iris.Context) {
 			_, _ = common.NewJsonOutput(ctx, outputDTO)
 			return
 		}
+		return
 	}
 	if doctronOutput.Err != nil {
 		outputDTO.Code = common.ConvertPdfFailed
@@ -103,7 +104,6 @@ func convertToPDFParams(requestDTO *Html2PdfRequestDTO) doctron_core.PDFParams {
 	params.MarginLeft = requestDTO.MarginLeft
 	params.MarginRight = requestDTO.MarginRight
 	params.PageRanges = requestDTO.PageRanges
-	params.IgnoreInvalidPageRanges = requestDTO.IgnoreInvalidPageRanges
 	params.HeaderTemplate = requestDTO.HeaderTemplate
 	params.FooterTemplate = requestDTO.FooterTemplate
 	params.PreferCSSPageSize = requestDTO.PreferCSSPageSize

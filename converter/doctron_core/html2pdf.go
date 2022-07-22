@@ -67,21 +67,20 @@ type PDFParams struct {
 func NewDefaultPDFParams() PDFParams {
 	return PDFParams{
 		PrintToPDFParams: page.PrintToPDFParams{
-			Landscape:               DefaultLandscape,
-			DisplayHeaderFooter:     DefaultDisplayHeaderFooter,
-			PrintBackground:         DefaultPrintBackground,
-			Scale:                   DefaultScale,
-			PaperWidth:              DefaultPaperWidth,
-			PaperHeight:             DefaultPaperHeight,
-			MarginTop:               DefaultMarginTop,
-			MarginBottom:            DefaultMarginBottom,
-			MarginLeft:              DefaultMarginLeft,
-			MarginRight:             DefaultMarginRight,
-			PageRanges:              DefaultPageRanges,
-			IgnoreInvalidPageRanges: DefaultIgnoreInvalidPageRanges,
-			HeaderTemplate:          DefaultHeaderTemplate,
-			FooterTemplate:          DefaultFooterTemplate,
-			PreferCSSPageSize:       DefaultPreferCSSPageSize,
+			Landscape:           DefaultLandscape,
+			DisplayHeaderFooter: DefaultDisplayHeaderFooter,
+			PrintBackground:     DefaultPrintBackground,
+			Scale:               DefaultScale,
+			PaperWidth:          DefaultPaperWidth,
+			PaperHeight:         DefaultPaperHeight,
+			MarginTop:           DefaultMarginTop,
+			MarginBottom:        DefaultMarginBottom,
+			MarginLeft:          DefaultMarginLeft,
+			MarginRight:         DefaultMarginRight,
+			PageRanges:          DefaultPageRanges,
+			HeaderTemplate:      DefaultHeaderTemplate,
+			FooterTemplate:      DefaultFooterTemplate,
+			PreferCSSPageSize:   DefaultPreferCSSPageSize,
 		},
 		WaitingTime: DefaultWaitingTime,
 	}
@@ -101,15 +100,15 @@ func (ins *html2pdf) Convert() ([]byte, error) {
 		ins.convertElapsed = time.Since(start)
 	}()
 	var params PDFParams
-	params, ok := ins.cc.Params.(PDFParams)
+	params, ok := ins.config.ConvertConfig.Params.(PDFParams)
 	if !ok {
 		return nil, errors.New("wrong pdf params given")
 	}
-	ctx, cancel := chromedp.NewContext(ins.ctx)
+	ctx, cancel := chromedp.NewContext(ins.config.Ctx)
 	defer cancel()
 
 	if err := chromedp.Run(ctx,
-		chromedp.Navigate(ins.cc.Url),
+		chromedp.Navigate(ins.config.ConvertConfig.Url),
 		chromedp.Sleep(time.Duration(params.WaitingTime)*time.Millisecond),
 		chromedp.ActionFunc(func(ctx context.Context) error {
 			var err error
